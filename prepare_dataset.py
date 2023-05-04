@@ -1,8 +1,9 @@
-from pathlib import Path
-from embedbase_client.client import EmbedbaseClient
 import configparser
+from pathlib import Path
 from typing import Tuple
+
 import yaml
+from embedbase_client.client import EmbedbaseClient
 
 
 def readConfigs(path: str, globalMode: bool = False) -> Tuple[str]:
@@ -12,9 +13,9 @@ def readConfigs(path: str, globalMode: bool = False) -> Tuple[str]:
     if globalMode:
         global openai_api_key, embedbase_key, embedbase_url
 
-    openai_api_key = config['OPENAI']['OPENAI_API_KEY']
-    embedbase_key = config['EMBEDBASE']['EMBEDBASE_KEY']
-    embedbase_url = config['EMBEDBASE']['EMBEDBASE_URL']
+    openai_api_key = config["OPENAI"]["OPENAI_API_KEY"]
+    embedbase_key = config["EMBEDBASE"]["EMBEDBASE_KEY"]
+    embedbase_url = config["EMBEDBASE"]["EMBEDBASE_URL"]
     return openai_api_key, embedbase_key, embedbase_url
 
 
@@ -31,11 +32,12 @@ def createDataset(yamlPath: str, configPath: str):
             print(exc)
 
     dataset_id = Path(yamlPath).stem  # name of file is dataset_id.
+    result = client.dataset(dataset_id).clear()  # reset first.
 
-    for doc in documents['content']:
+    for doc in documents["content"]:
         result = client.dataset(dataset_id).add(doc["data"], doc["metadata"])
         print(result)
 
 
 if __name__ == "__main__":
-    createDataset("docs/lettuce_hydroponic.yaml", "secrets.ini")
+    createDataset("docs/OUIF.yaml", "secrets.ini")
